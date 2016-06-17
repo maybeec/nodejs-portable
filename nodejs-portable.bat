@@ -29,15 +29,23 @@ SETLOCAL EnableDelayedExpansion
 
 TITLE Node.js Portable v1.11
 
+:: Command line parameter passing for automatic installation by
+:: nodejs-portable 2 <version> <architecture>
+:: e.g. nodejs-portable 2 4.4.5 x64
+
 :: Settings
-SET nodejsVersion=0.10.40
-SET nodejsArch=x86
+SET default_nodejsVersion=4.4.5
+SET default_nodejsArch=x64
 ::SET proxyUrl=<url>:<port>
 ::SET proxyUser=<domain>\<user>
 ::SET proxyPwd=<password>
 
 :: Batch vars (no edits necessary)
 SET nodejsTask=%1
+SET nodejsVersionC=%2
+SET nodejsArchC=%3
+SET autoinstall=0
+IF NOT "%nodejsTask%"=="" IF NOT "%nodejsVersionC%"=="" IF NOT "%nodejsArchC%"=="" SET autoinstall=1
 SET nodejsPath=%~dp0
 SET nodejsPath=!nodejsPath:~0,-1!
 SET nodejsWork=%nodejsPath%\work
@@ -85,11 +93,18 @@ GOTO MENU
 IF EXIST "%nodejsPath%\node.exe" ECHO node.js is already installed... && GOTO EOF
 
 :: Choose version and arch
-SET nodejsVersionC=%nodejsVersion%
-SET /P nodejsVersionC=Version (default %nodejsVersion%): 
-SET nodejsArchC=%nodejsArch%
-SET /P nodejsArchC=Architecture x86 or x64 (default %nodejsArch%): 
+:: Check if the version selection is provided as a command line parameter
+IF "%nodejsVersionC%"=="" (
+	SET nodejsVersionC=%default_nodejsVersion%
+	SET /P nodejsVersionC="Version (default %default_nodejsVersion%): "
+)
+:: Check if the architecture selection is provided as a command line parameter
+IF "%nodejsArchC%"=="" (
+	SET nodejsArchC=%default_nodejsArch%
+	SET /P nodejsArchC="Architecture x86 or x64 (default %default_nodejsArch%): "
+)
 ECHO.
+ECHO Installing nodejs of version %nodejsVersionC% for %nodejsArchC% architecture...
 
 :: Prepare URLs
 SET nodejsMsiPackage=node-v%nodejsVersionC%-%nodejsArchC%.msi
@@ -203,6 +218,7 @@ GOTO EOF
 :EOF
 ::::::::::::::::::::::::::::::::::::::::
 
+IF %autoinstall% == 1 GOTO EXIT
 ECHO.
 PAUSE
 GOTO MENU
