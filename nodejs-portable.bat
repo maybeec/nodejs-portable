@@ -26,6 +26,8 @@ SETLOCAL EnableDelayedExpansion
 ::  Usage: nodejs-portable.bat                                                    ::
 ::                                                                                ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: edited by maybeec on https://github.com/maybeec/nodejs-portable                ::
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 TITLE Node.js Portable v1.11
 
